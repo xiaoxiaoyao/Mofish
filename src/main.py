@@ -5,8 +5,7 @@ import click
 from zhdate import ZhDate as lunar_date
 
 
-def get_week_day(date):
-    week_day_dict = {
+get_week_day = {
         0: '星期一',
         1: '星期二',
         2: '星期三',
@@ -15,16 +14,14 @@ def get_week_day(date):
         5: '星期六',
         6: '星期天',
     }
-    day = date.weekday()
-    return week_day_dict[day]
 
 
 def get_closing_time(closing_time: str = "18:00:00"):
     now_ = datetime.datetime.now()
-    target_ = datetime.datetime.strptime(f"{now_.year}-{now_.month}-{now_.day} {closing_time}", '%Y-%m-%d %H:%M:%S')
-    if now_ < target_:
-        time_delta_ = target_ - now_
-        secs = time_delta_.seconds
+    secs = (
+        datetime.datetime.strptime(f"{now_.year}-{now_.month}-{now_.day} {closing_time}", '%Y-%m-%d %H:%M:%S') - datetime.datetime.now()
+    ).seconds
+    if 0 < secs:
         hours = secs // 3600
         mins = (secs % 3600) // 60
         return f'{hours} 小时 {mins} 分钟'
@@ -94,10 +91,10 @@ def cli():
     print()
     today = datetime.date.today()
     now_ = f"{today.year}年{today.month}月{today.day}日"
-    week_day_ = get_week_day(today)
+    week_day_ = get_week_day[today.weekday()]
     print(f'\t\t {Fore.GREEN}{now_} {week_day_}')
     str_ = '''
-    你好，摸鱼人，工作再累，一定不要忘记摸鱼哦 ! 
+    你好，摸鱼人，工作再累，一定不要忘记摸鱼哦 ! ！
     有事没事起身去茶水间去廊道去天台走走，别老在工位上坐着。
     多喝点水，钱是老板的，但命是自己的 !
     '''
